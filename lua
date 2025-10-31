@@ -810,15 +810,26 @@ Tab_Character:Toggle({
             WindUI:Notify({Title="❌ Hook Disabled", Description="❌ Hook Disabled", Duration=3})
         end
     })
-   
+   Tab_Character:Toggle({
+    Title = "Pickup Item",
+    Default = false,
+    Callback = function(state)
+        pickupEnabled = state
+        if state then
+            WindUI:Notify({Title="✅ Pickup Enabled", Description="ระบบเก็บของอัตโนมัติเปิดแล้ว", Duration=3})
+        else
+            WindUI:Notify({Title="❌ Pickup Disabled", Description="ระบบเก็บของอัตโนมัติปิดแล้ว", Duration=3})
+        end
+    end
+})
 
-local pickupEnabled = false
+--// ======== โค้ดจริงอยู่หลัง toggle ========
 
 local DETECTION_RANGE = 17
 local MAGNET_SPEED = 900
 local PICKUP_ZONE_SIZE = 17
 
-local function adjustPickUpZone(instance)
+adjustPickUpZone = function(instance)
     local pickUpZone = instance:FindFirstChild("PickUpZone")
     if pickUpZone and pickUpZone:IsA("BasePart") then
         pickUpZone.Size = Vector3.new(PICKUP_ZONE_SIZE, PICKUP_ZONE_SIZE, PICKUP_ZONE_SIZE)
@@ -827,7 +838,7 @@ local function adjustPickUpZone(instance)
     end
 end
 
-local function handleItem(item)
+handleItem = function(item)
     if not pickupEnabled then return end
     local character = LocalPlayer.Character
     if not character or not character:FindFirstChild("HumanoidRootPart") then return end
@@ -863,18 +874,3 @@ workspace.DescendantAdded:Connect(function(instance)
         adjustPickUpZone(instance.Parent)
     end
 end)
-
-
-
-Tab_Character:Toggle({
-    Title = "Pickup Item",
-    Default = false,
-    Callback = function(state)
-        pickupEnabled = state
-        if state then
-            WindUI:Notify({Title="✅ Pickup Enabled", Description="ดูดของเปิดละ", Duration=3})
-        else
-            WindUI:Notify({Title="❌ Pickup Disabled", Description="ดูดของปิดละ", Duration=3})
-        end
-    end
-})
